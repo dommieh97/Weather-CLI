@@ -30,6 +30,7 @@ last_updated = data["current"]["last_updated"]
 wind_mph = data["current"]["wind_mph"]
 current_condition = data['current']['condition']["text"]
 
+no = f"{pyfiglet.figlet_format('GOODBYE')}\n\n"
 output = f"{pyfiglet.figlet_format(location)}, {pyfiglet.figlet_format(region)},{pyfiglet.figlet_format(country)}\n\n"
 output += f"Temperature {feels_like}F\n\n"
 output += f"Local Time {local_time}\n\n"
