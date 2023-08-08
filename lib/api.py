@@ -1,120 +1,140 @@
 import requests
+import argparse
+import pyfiglet
+from simple_chalk import chalk
 
-api_url = "http://api.weatherapi.com/v1/current.json?key=e984033b925f443ebc1211505230608&q=Houston&aqi=no"
 
-def fetch_data_with_api_key(api_url):
-    try:
-        response = requests.get(api_url)
-        response.raise_for_status() 
-        data = response.json()     
-        return data
-    except requests.exceptions.RequestException as e:
-        print("Error fetching data:", e)
-        return None
 
-data = fetch_data_with_api_key(api_url)
+BASE_URL = "http://api.weatherapi.com/v1/current.json?key=e984033b925f443ebc1211505230608"
+
+city = input(chalk.green("Type a city here: "))
+# parser= argparse.ArgumentParser(description="Check the weather for certain city")
+# parser.add_argument("city", help = "The city to check the weather for")
+# args = parser.parse_args()
+# city = args.city
+
+url = f"{BASE_URL}&q={city}&aqi=no"
+
+
+response = requests.get(url)
+
+data = response.json()
+
+
+location = data["location"]["name"]
+region = data["location"]["region"]
+country = data["location"]["country"]
+feels_like = data["current"]["temp_f"]
+local_time = data["location"]["localtime"]
+last_updated = data["current"]["last_updated"]
+wind_mph = data["current"]["wind_mph"]
+current_condition = data['current']['condition']["text"]
+
+output = f"{pyfiglet.figlet_format(location)}, {pyfiglet.figlet_format(region)},{pyfiglet.figlet_format(country)}\n\n"
+output += f"Temperature {feels_like}F\n\n"
+output += f"Local Time {local_time}\n\n"
+output += f"Current Wind in MPH {wind_mph}mph\n\n"
+output += f"Current Condition {current_condition} : "
+
+
 
 if data:
-    # Do something with the fetched data
-    print(data["location"])
-    # print(data["current"])
-    # apple = data["current"]
-    # print(data)
     if data["current"]["condition"]["text"] == "Sunny":
-        print("☀️")
+        output += "☀️"
     elif data["current"]["condition"]["text"] == "Partly cloudy":
-        print("⛅ ")
+        output += "⛅"
     elif data["current"]["condition"]["text"] == "Cloudy":
-        print("☁")
+        output += "☁"
     elif data["current"]["condition"]["text"] == "Overcast":
-        print("⛅ ")
+        output += "⛅"
     elif data["current"]["condition"]["text"] == "Mist":
-        print("⛆")
+        output += "⛆"
     elif data["current"]["condition"]["text"] == "Pathcy rain possible":
-        print("🌦")
+        output += "🌦"
     elif data["current"]["condition"]["text"] == "Patchy snow possible":
-        print("🌨")
+        output += "🌨"
     elif data["current"]["condition"]["text"] == "Patchy sleet possible":
-        print("🌨")
+        output += "🌨"
     elif data["current"]["condition"]["text"] == "Patchy freezing drizzle possible":
-        print("🌨")
+        output += "🌨"
     elif data["current"]["condition"]["text"] == "Thundery outbreaks possible":
-        print("🌩")
+        output += "🌩"
     elif data["current"]["condition"]["text"] == "Blowing snow":
-        print("🌬")
+        output += "🌬"
     elif data["current"]["condition"]["text"] == "Blizzard":
-        print("⛇")
+        output += "⛇"
     elif data["current"]["condition"]["text"] == "Fog":
-        print("☁")
+        output += "☁"
     elif data["current"]["condition"]["text"] == "Freezing fog":
-        print("☁")
+        output += "☁"
     elif data["current"]["condition"]["text"] == "Patchy light drizzle":
-        print("🌦")
+        output += "🌦"
     elif data["current"]["condition"]["text"] == "Light drizzle":
-        print("🌦")
+        output += "🌦"
     elif data["current"]["condition"]["text"] == "Freezing drizzle":
-        print("🌧")
+        output += "🌧"
     elif data["current"]["condition"]["text"] == "Heavy freezing drizzle":
-        print("🌧")
+        output += "🌧"
     elif data["current"]["condition"]["text"] == "Patchy light rain":
-        print("🌧")
+        output += "🌧"
     elif data["current"]["condition"]["text"] == "Light rain":
-        print("🌧")
+        output += "🌧"
     elif data["current"]["condition"]["text"] == "Moderate rain at times":
-        print("🌧")
+        output += "🌧"
     elif data["current"]["condition"]["text"] == "Moderate rain":
-        print("🌧")
+        output += "🌧"
     elif data["current"]["condition"]["text"] == "Heavy rain at times":
-        print("🌧")
+        output += "🌧"
     elif data["current"]["condition"]["text"] == "Heavy rain":
-        print("🌧")
+        output += "🌧"
     elif data["current"]["condition"]["text"] == "Light freezing rain":
-        print("🌧")
+        output += "🌧"
     elif data["current"]["condition"]["text"] == "Moderate or heavy freezing rain":
-        print("🌧")
+        output += "🌧"
     elif data["current"]["condition"]["text"] == "Light sleet":
-        print("🌧")
+        output += "🌧"
     elif data["current"]["condition"]["text"] == "Moderate or heavy sleet":
-        print("🌧")
+        output += "🌧"
     elif data["current"]["condition"]["text"] == "Patchy light snow":
-        print("🌨")
+        output += "🌨"
     elif data["current"]["condition"]["text"] == "Light snow":
-        print("🌨")
+        output += "🌨"
     elif data["current"]["condition"]["text"] == "Patchy moderate snow":
-        print("🌨")
+        output += "🌨"
     elif data["current"]["condition"]["text"] == "Moderate snow":
-        print("🌨")
+        output += "🌨"
     elif data["current"]["condition"]["text"] == "Patchy heavy snow":
-        print("🌨")
+        output += "🌨"
     elif data["current"]["condition"]["text"] == "Heavy snow":
-        print("🌨")
+        output += "🌨"
     elif data["current"]["condition"]["text"] == "Ice pellets":
-        print("🌨")
+        output += "🌨"
     elif data["current"]["condition"]["text"] == "Light rain shower":
-        print("🌧")
+        output += "🌧"
     elif data["current"]["condition"]["text"] == "Moderate or heavy rain shower":
-        print("🌧")
+        output += "🌧"
     elif data["current"]["condition"]["text"] == "Torrential rain shower":
-        print("🌧")
+        output += "🌧"
     elif data["current"]["condition"]["text"] == "Light sleet showers":
-        print("🌨")
+        output += "🌨"
     elif data["current"]["condition"]["text"] == "Moderate or heavy sleet showers":
-        print("🌨")
+        output += "🌨"
     elif data["current"]["condition"]["text"] == "Light snow showers":
-        print("🌨")
+        output += "🌨"
     elif data["current"]["condition"]["text"] == "Moderate or heavy snow showers":
-        print("🌨")
+        output += "🌨"
     elif data["current"]["condition"]["text"] == "Light showers of ice pellets":
-        print("🌨")
+        output += "🌨"
     elif data["current"]["condition"]["text"] == "Moderate or heavy showers of ice pellets":
-        print("🌨")
+        output += "🌨"
     elif data["current"]["condition"]["text"] == "Patchy light rain with thunder":
-        print("⛈")
+        output += "⛈"
     elif data["current"]["condition"]["text"] == "Moderate or heavy rain with thunder":
-        print("⛈")
+        output += "⛈"
     elif data["current"]["condition"]["text"] == "Patchy light snow with thunder":
-        print("⛈☃")
+        output += "⛈☃"
     elif data["current"]["condition"]["text"] == "Moderate or heavy snow with thunder":
-        print("⛈☃")
-
-    
+        output += "⛈☃"
+    elif data["current"]["condition"]["text"] == "Clear":
+        output += "🌝"
+print(chalk.blue(output))

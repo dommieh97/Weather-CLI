@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 sqlalchemy = "*"
 alembic = "*"
+pyfiglet = "*"
+simple-chalk = "*"
+argparse = "*"
 
 [dev-packages]
 
