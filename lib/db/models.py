@@ -1,14 +1,44 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
 class User(Base):
     __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True)
 
-    id = Column(Integer(), primary_key=True)
-    username = Column(String())
+    cities = relationship('City', back_populates='user')
+    weather_preferences = relationship('WeatherPreference', back_populates='user')
 
-    def __repr__(self):
-        return f'Id: {self.id}, ' \
-            f'Username {self.username}' 
+class City(Base):
+    __tablename__ = 'cities'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    region = Column(String)
+    country = Column(String)
+
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship('User', back_populates='cities')
+    weather_preferences = relationship('WeatherPreference', back_populates='city')
+
+class WeatherPreference(Base):
+    __tablename__ = 'weather_preferences'
+    id = Column(Integer, primary_key=True)
+    preferred_units = Column(String)
+    temperature_threshold = Column(Integer)
+    precipitation_threshold = Column(Integer)
+    humidity_threshold = Column(Integer)
+    feelsLike_threshold = Column(Integer)
+
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship('User', back_populates='weather_preferences')
+    city_id = Column(Integer, ForeignKey('cities.id'))
+    city = relationship('City', back_populates='weather_preferences')
+
+engine = create_engine('sqlite:///weather_cli.db')
+Base.metadata.create_all(engine)
+
+Session = sessionmaker(bind=engine)
+session = Session()

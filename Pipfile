@@ -9,6 +9,7 @@ alembic = "*"
 pyfiglet = "*"
 simple-chalk = "*"
 argparse = "*"
+requests = "*"
 
 [dev-packages]
 
