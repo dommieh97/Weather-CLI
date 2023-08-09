@@ -10,6 +10,7 @@ pyfiglet = "*"
 simple-chalk = "*"
 argparse = "*"
 requests = "*"
+faker = "*"
 
 [dev-packages]
 
