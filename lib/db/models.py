@@ -22,15 +22,13 @@ class City(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship('User', back_populates='cities')
     weather_preferences = relationship('WeatherPreference', back_populates='city')
+    def __str__(self):
+        return self.name
 
 class WeatherPreference(Base):
     __tablename__ = 'weather_preferences'
     id = Column(Integer, primary_key=True)
     preferred_units = Column(String)
-    temperature_threshold = Column(Integer)
-    precipitation_threshold = Column(Integer)
-    humidity_threshold = Column(Integer)
-    feelsLike_threshold = Column(Integer)
 
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship('User', back_populates='weather_preferences')

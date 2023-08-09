@@ -11,6 +11,7 @@ def byebye():
 
 
 def fetch_weather():
+    global city
     try:
         city = input(chalk.green("Type a city here: "))
         url = f"{BASE_URL}&q={city}&aqi=no"
@@ -150,12 +151,12 @@ def fetch_weather():
             elif data["current"]["condition"]["text"] == "Clear":
                 output += "🌝"
         print(chalk.blue(output))
-    
-            
+
         if response.status_code == 200:
             good_response_code()
     except KeyError:
-            raise KeyError
+            print(chalk.red("Sorry, No information is available because you are illiterate. Try again after looking up how to spell. Thank You!"))
+            fetch_weather()
 
 def get_city_input():
     return input(chalk.green("Enter a city: "))
@@ -168,8 +169,21 @@ def bad_status_code():
     print(chalk.red("Sorry, No information is available because you are illiterate. Try again after looking up how to spell. Thank You!"))
     fetch_weather()
 
-def store_city():
-    pass
+def store_city(city_name):
+    from functions import is_logged_in, session, current_user
+    from db.models import User, City
+    
+    if is_logged_in and current_user:
+        user = session.query(User).filter(User.id == current_user.id).first()
+        if user:
+            new_city = City(name=city_name)
+            user.cities.append(new_city)
+            session.commit()
+            print(f"{city_name} has been saved")
+        else:
+            print("User not found")
+    else:
+        print("Login to save city")
 
 def process_choice(choice):
     from functions import menu, is_logged_in
@@ -178,8 +192,8 @@ def process_choice(choice):
     elif choice == '2':
         menu()
     elif choice == '3':
-        if is_logged_in == True:
-            store_city()
+        if is_logged_in:
+            store_city(city)
         else:
             byebye()
     elif choice == '4':
@@ -201,3 +215,4 @@ def good_response_code():
 
 if __name__ == "__main__":
     good_response_code()
+    
