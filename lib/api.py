@@ -2,11 +2,9 @@ import requests
 import argparse
 import pyfiglet
 from simple_chalk import chalk
-
 BASE_URL = "http://api.weatherapi.com/v1/current.json?key=e984033b925f443ebc1211505230608"
 
 no = f"{pyfiglet.figlet_format('GOODBYE')}\n\n"
-
 def byebye():
     print(chalk.red(no))
     exit()
@@ -163,29 +161,42 @@ def get_city_input():
     return input(chalk.green("Enter a city: "))
 
 def show_main_menu():
-    return input(chalk.green("Enter 1 to try again, 2 for main menu, or 3 to quit : "))
+    from functions import is_logged_in
+    return input(chalk.green(f'Enter 1 to try again, 2 for main menu, {"3 save city, or 4 to quit"if is_logged_in == True else "or 3 to quit"}: \n'))
 
 def bad_status_code():
     print(chalk.red("Sorry, No information is available because you are illiterate. Try again after looking up how to spell. Thank You!"))
     fetch_weather()
 
+def store_city():
+    pass
 
 def process_choice(choice):
-    from functions import menu
+    from functions import menu, is_logged_in
     if choice == '1':
         fetch_weather()
     elif choice == '2':
         menu()
     elif choice == '3':
-        byebye()
+        if is_logged_in == True:
+            store_city()
+        else:
+            byebye()
+    elif choice == '4':
+        if is_logged_in == True:
+            byebye()
+        else:
+            print(chalk.red(f"Invalid choice. Please enter 1, 2, or 3. Or else I'm kicking you out >:("))
+
 
 def good_response_code():
+    from functions import is_logged_in
     while True:
         choice = show_main_menu()
-        if choice in ('1', '2', '3'):
+        if choice in (f'1 , 2, {"3 , 4"if is_logged_in == True else "3" } \n'):
             process_choice(choice)
         else:
-            print(chalk.red("Invalid choice. Please enter 1, 2, or 3. Or else I'm kicking you out >:("))
+            print(chalk.red(f"Invalid choice. Please enter 1, 2, {'3 or 4' if is_logged_in == True else 'or 3'}. Or else I'm kicking you out >:(\n"))
         
 
 if __name__ == "__main__":
