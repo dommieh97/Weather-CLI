@@ -37,7 +37,7 @@ class WeatherPreference(Base):
     city_id = Column(Integer, ForeignKey('cities.id'))
     city = relationship('City', back_populates='weather_preferences')
 
-engine = create_engine('sqlite:///weather_cli.db')
+engine = create_engine('sqlite:///db/weather_cli.db')
 Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)

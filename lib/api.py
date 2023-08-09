@@ -2,11 +2,14 @@ import requests
 import argparse
 import pyfiglet
 from simple_chalk import chalk
-from faker import Faker
 
 BASE_URL = "http://api.weatherapi.com/v1/current.json?key=e984033b925f443ebc1211505230608"
 
 no = f"{pyfiglet.figlet_format('GOODBYE')}\n\n"
+
+def byebye():
+    print(chalk.red(no))
+    exit()
 
 
 def fetch_weather():
@@ -20,13 +23,31 @@ def fetch_weather():
         location = data["location"]["name"]
         region = data["location"]["region"]
         country = data["location"]["country"]
-        feels_like = data["current"]["temp_f"]
+        # lat = data["location"]["lat"]
+        # lon = data["location"]["lon"]
+        # tz = data["location"]["tz_id"]
+        # localtime = data["location"]["localtime"]
+        temp_f = data["current"]["temp_f"]
+        # temp_c = data["current"]["temp_c"]
         local_time = data["location"]["localtime"]
         wind_mph = data["current"]["wind_mph"]
+        # wind_kph = data["location"]["wind_kph"]
+        # wind_dir = data["location"]["wind_dir"]
+        # precip_mm = data["location"]["precip_mm"]
+        # precip_in = data["location"]["precip_in"]
+        # humidity = data["location"]["humidity"]
+        # cloud = data["location"]["cloud"]
         current_condition = data['current']['condition']["text"]
+        # feels_like_c = data['current']['feels_like_c']
+        # feels_like_f = data['current']['feels_like_f']
+        # vis_km = data['current']['vis_km']
+        # vis_miles = data['current']['vis_miles']
+        # uv = data['current']['uv']
+
+
 
         output = f"{pyfiglet.figlet_format(location)}, {pyfiglet.figlet_format(region)},{pyfiglet.figlet_format(country)}\n\n"
-        output += f"Temperature {feels_like}F\n\n"
+        output += f"Temperature {temp_f}F\n\n"
         output += f"Local Time {local_time}\n\n"
         output += f"Current Wind in MPH {wind_mph}mph\n\n"
         output += f"Current Condition {current_condition} : "
@@ -131,12 +152,12 @@ def fetch_weather():
             elif data["current"]["condition"]["text"] == "Clear":
                 output += "🌝"
         print(chalk.blue(output))
-
+    
             
         if response.status_code == 200:
             good_response_code()
     except KeyError:
-            bad_status_code()
+            raise KeyError
 
 def get_city_input():
     return input(chalk.green("Enter a city: "))
@@ -150,12 +171,13 @@ def bad_status_code():
 
 
 def process_choice(choice):
+    from functions import menu
     if choice == '1':
         fetch_weather()
     elif choice == '2':
-        print(chalk.magentaBright("Main menu go brrrrrrr."))
+        menu()
     elif choice == '3':
-        exit()
+        byebye()
 
 def good_response_code():
     while True:
