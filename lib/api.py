@@ -17,7 +17,6 @@ def fetch_weather():
     global city
     global region
     global country
-    print(feels)
     try:
         city = input(chalk.green.bold("Type a city here: "))
         url = f"{BASE_URL}&q={city}&aqi=no"
@@ -66,6 +65,8 @@ def fetch_weather():
                     humidity = data["current"]["humidity"]
                 else:
                     pass
+            else:
+                pass
         current_condition = data['current']['condition']["text"]
         if is_logged_in:
             if feels != "2" and feels is not None:
@@ -210,7 +211,6 @@ def fetch_weather():
         if response.status_code == 200:
             good_response_code()
     except KeyError:
-            # raise KeyError
             print(chalk.red("Sorry, No information is available because you are illiterate. Try again after looking up how to spell. Thank You!"))
             fetch_weather()
 
@@ -237,7 +237,7 @@ def store_city(city_name,region,country):
                 new_city = City(name=city_name, region=region, country=country)
                 user.cities.append(new_city)
                 session.commit()
-                print(f"{city_name} has been saved")
+                print(chalk.green.bold(f"{city_name} has been saved"))
             else:
                 print(chalk.red("City is already in database"))
         else:

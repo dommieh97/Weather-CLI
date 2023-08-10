@@ -88,10 +88,11 @@ def add_user():
     new_user = User(username=new_username)
     session.add(new_user)
     session.commit()
-    global is_logged_in
-    is_logged_in = True
     current_user = session.query(User).filter(User.username == new_username).first()
     print(chalk.green.bold("login success!"))
+    add_preference()
+    global is_logged_in
+    is_logged_in = True
     menu()
 
 def add_preference():
@@ -100,12 +101,19 @@ def add_preference():
     global new_humids
     global new_feels_likes
     global new_visibs
+    global units
+    global visibs
+    global humids
+    global precips
+    global feels
+    
     new_units = input(chalk.green("Pick Metric or Imperial(american): 1 or 2\n"))
     new_precips = input(chalk.green("Would you like to add precipitation? 1 Yes 2 No\n"))
     new_humids = input(chalk.green("Would you like to add humidity? 1 Yes 2 No\n"))
     new_feels_likes = input(chalk.green("Would you like to add feels like temperature? 1 Yes 2 No\n"))
     new_visibs = input(chalk.green("Would you like to add visibility range? 1 Yes 2 No\n"))
     preferences = WeatherPreference(preferred_units=new_units,precip_unit = new_precips,humid_unit = new_humids,feels_like_unit = new_feels_likes,visibility_unit = new_visibs, user_id = current_user.id)
+    
     uni = session.query(WeatherPreference).filter(WeatherPreference.user_id == current_user.id).first()
     if uni:
         setattr(uni, "preferred_units", new_units)
@@ -113,13 +121,21 @@ def add_preference():
         setattr(uni, "humid_unit", new_humids)
         setattr(uni, "feels_like_unit", new_feels_likes)
         setattr(uni, "visibility_unit", new_visibs)
-
-   
     
-    session.add(preferences)
+    
+   
+    if is_logged_in == False:
+        session.add(preferences)
+    else:
+        pass
     session.commit()
-    menu()
-
+    
+    current_prefs = session.query(WeatherPreference).filter(WeatherPreference.user_id == User.id).first()
+    units = current_prefs.preferred_units
+    precips = current_prefs.precip_unit
+    humids = current_prefs.humid_unit
+    feels = current_prefs.feels_like_unit
+    visibs = current_prefs.visibility_unit
 def set_preference():
     global units
     global visibs
@@ -131,6 +147,7 @@ def set_preference():
     humids = current_prefs.humid_unit
     feels = current_prefs.feels_like_unit
     visibs = current_prefs.visibility_unit
+
 def typewriter(message):
     for char in message:
         sys.stdout.write(char)
