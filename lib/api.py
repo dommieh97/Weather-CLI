@@ -6,7 +6,7 @@ BASE_URL = "http://api.weatherapi.com/v1/current.json?key=e984033b925f443ebc1211
 
 no = f"{pyfiglet.figlet_format('GOODBYE')}\n\n"
 def byebye():
-    print(chalk.red(no))
+    print(chalk.red.bold(no))
     exit()
 
 
@@ -17,9 +17,9 @@ def fetch_weather():
     global city
     global region
     global country
-    
+    print(feels)
     try:
-        city = input(chalk.green("Type a city here: "))
+        city = input(chalk.green.bold("Type a city here: "))
         url = f"{BASE_URL}&q={city}&aqi=no"
 
         response = requests.get(url)
@@ -30,7 +30,7 @@ def fetch_weather():
         country = data["location"]["country"]
         if is_logged_in:
             if units is not None:
-                if units.preferred_units == "1" or units.preferred_units == "metric":
+                if units == "1" or units == "metric":
                     temp = str(data["current"]["temp_c"]) + "C"
                 else:
                     temp = str(data["current"]["temp_f"]) + "F"
@@ -41,7 +41,7 @@ def fetch_weather():
         local_time = data["location"]["localtime"]
         if is_logged_in:
             if units is not None:
-                if units.preferred_units == "1" or units.preferred_units == "metric":
+                if units == "1" or units == "metric":
                     wind = str(data["current"]["wind_kph"]) + "KPH"
                 else:
                     wind = str(data["current"]["wind_mph"]) + "MPH"
@@ -51,67 +51,61 @@ def fetch_weather():
             wind = str(data["current"]["wind_mph"]) + "MPH"
         wind_dir = data["current"]["wind_dir"]
         if is_logged_in: 
-            if precips is not None:
-                if precips.precip_unit == "1" and units.preferred_units == "1" or units.preferred_units == "metric":
+            if precips != "2" and precips is not None:
+                if units == "1":
                     precip = str(data["current"]["precip_mm"])+"mm"
-                elif precips.precip_unit == "1" and units.preferred_units == "2" or units.preferred_units == "imperial":
+                else:
                     precip = str(data["current"]["precip_in"])+"in"
-                elif precips.precip_unit == "1":
-                    precip = data["current"]["precip_in"]
             else:
                 pass
         else:
             pass
         if is_logged_in: 
-            if humids is not None:
-                if humids.humid_unit == "1":
+            if humids != "2" and humids is not None:
+                if units == "1":
                     humidity = data["current"]["humidity"]
                 else:
                     pass
         current_condition = data['current']['condition']["text"]
         if is_logged_in:
-            if feels is not None:
-                if feels.feels_like_unit == "1" and units.preferred_units == "1" or units.preferred_units == "metric":
-                    feels_like = data['current']['feelslike_c']
-                elif feels.feels_like_unit == "1" and units.preferred_units == "2" or units.preferred_units == "imperial":
-                    feels_like = data['current']['feelslike_f']
-                elif feels.feels_like_unit == "1":
-                    feels_like = data['current']['feelslike_f']
+            if feels != "2" and feels is not None:
+                if units == "1":
+                    feels_like = str(data['current']['feelslike_c'])+"C"
                 else:
-                    pass
+                    feels_like = str(data['current']['feelslike_f'])+"F"
+            else:
+                pass
         else:
             pass
         if is_logged_in: 
-            if visibs is not None:
-                if visibs.visibility_unit == "1" and units.preferred_units == "1" or units.preferred_units == "metric":
-                    vis = data['current']['vis_km']
-                elif visibs.visibility_unit == "1" and units.preferred_units == "2" or units.preferred_units == "imperial":
-                    vis = data['current']['vis_miles']
-                elif visibs.visibility_unit == "1":
-                    vis = data['current']['vis_miles']
+            if visibs != "2" and visibs is not None:
+                if units == "1":
+                    vis = str(data['current']['vis_km'])+"KM"
+                else :
+                    vis = str(data['current']['vis_miles'])+"miles"
             else:
                 pass
         else:
             pass
         
         
-        output = f"{pyfiglet.figlet_format(location)}, {pyfiglet.figlet_format(region)},{pyfiglet.figlet_format(country)}\n\n"
-        output += f"Temperature {temp}\n\n"
+        output = f"{pyfiglet.figlet_format(location)}{pyfiglet.figlet_format(region)}{pyfiglet.figlet_format(country)}\n\n"
+        output += f"Temperature: {temp}\n\n"
         if is_logged_in:
-            if feels is not None:
-                output += f"Temperature feels like {feels_like}\n\n"
-        output += f"Local Time {local_time}\n\n"
-        output += f"Current Wind {wind}mph {wind_dir}\n\n"
+            if feels != "2" and feels is not None:
+                output += f"Temperature feels like: {feels_like}\n\n"
+        output += f"Local Time: {local_time}\n\n"
+        output += f"Current Wind: {wind} {wind_dir}\n\n"
         if is_logged_in:
-            if precips is not None:
-                output += f"Current Precipitation {precip}\n\n"
+            if precips != "2" and precips is not None:
+                output += f"Current Precipitation: {precip}\n\n"
         if is_logged_in:        
-            if humids is not None:
-                output += f"Current Humidity {humidity}\n\n"
+            if  humids != "2" and humids is not None:
+                output += f"Current Humidity: {humidity}\n\n"
         if is_logged_in:
-            if visibs is not None:
-                output += f"Current visibility is {vis}\n\n"
-        output += f"Current Condition {current_condition} : "
+            if visibs != "2" and visibs is not None:
+                output += f"Current visibility: {vis}\n\n"
+        output += f"Current Condition: {current_condition}: "
 
         if data:
             if data["current"]["condition"]["text"] == "Sunny":
@@ -212,7 +206,7 @@ def fetch_weather():
                 output += "⛈☃"
             elif data["current"]["condition"]["text"] == "Clear":
                 output += "🌝"
-        print(chalk.blue(output))
+        print(chalk.blue.bold(output))
         if response.status_code == 200:
             good_response_code()
     except KeyError:
@@ -221,7 +215,7 @@ def fetch_weather():
             fetch_weather()
 
 def get_city_input():
-    return input(chalk.green("Enter a city: "))
+    return input(chalk.green.bold("Enter a city: "))
 
 def show_main_menu():
     from functions import is_logged_in
@@ -245,11 +239,11 @@ def store_city(city_name,region,country):
                 session.commit()
                 print(f"{city_name} has been saved")
             else:
-                print("City is already in database")
+                print(chalk.red("City is already in database"))
         else:
-            print("User not found")
+            print(chalk.red("User not found"))
     else:
-        print("Login to save city")
+        print(chalk.red("Login to save city"))
 
 def process_choice(choice):
     from functions import menu, is_logged_in

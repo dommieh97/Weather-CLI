@@ -6,5 +6,5 @@ from simple_chalk import chalk
 hi = f"{pyfiglet.figlet_format('WELCOME')}\n\n"
 
 if __name__ == '__main__':
-    print(chalk.green(hi))
+    print(chalk.green.bold(hi))
     menu()    
