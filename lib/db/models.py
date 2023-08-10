@@ -29,7 +29,10 @@ class WeatherPreference(Base):
     __tablename__ = 'weather_preferences'
     id = Column(Integer, primary_key=True)
     preferred_units = Column(String)
-
+    precip_unit = Column(String)
+    humid_unit = Column(String)
+    feels_like_unit = Column(String)
+    visibility_unit = Column(String)
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship('User', back_populates='weather_preferences')
     city_id = Column(Integer, ForeignKey('cities.id'))

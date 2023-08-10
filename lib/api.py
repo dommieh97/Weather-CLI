@@ -11,6 +11,9 @@ def byebye():
 
 
 def fetch_weather():
+    from functions import is_logged_in
+    if is_logged_in == True: 
+        from functions import units, humids, precips,feels, visibs
     global city
     try:
         city = input(chalk.green("Type a city here: "))
@@ -22,33 +25,79 @@ def fetch_weather():
         location = data["location"]["name"]
         region = data["location"]["region"]
         country = data["location"]["country"]
-        # lat = data["location"]["lat"]
-        # lon = data["location"]["lon"]
-        # tz = data["location"]["tz_id"]
-        # localtime = data["location"]["localtime"]
-        temp_f = data["current"]["temp_f"]
-        # temp_c = data["current"]["temp_c"]
+        if is_logged_in:
+            if units == "1" or units == "metric":
+                temp = data["current"]["temp_c"]
+            else:
+                temp = data["current"]["temp_f"]
+        else:
+            temp = data["current"]["temp_f"]
         local_time = data["location"]["localtime"]
-        wind_mph = data["current"]["wind_mph"]
-        # wind_kph = data["location"]["wind_kph"]
-        # wind_dir = data["location"]["wind_dir"]
-        # precip_mm = data["location"]["precip_mm"]
-        # precip_in = data["location"]["precip_in"]
-        # humidity = data["location"]["humidity"]
-        # cloud = data["location"]["cloud"]
+        if is_logged_in:
+            if units == "1" or units == "metric":
+                wind = data["current"]["wind_kph"]
+            else:
+                wind = data["current"]["wind_mph"]
+        else:
+            wind = data["current"]["wind_mph"]
+        wind_dir = data["current"]["wind_dir"]
+        if is_logged_in: 
+            if precips == "1" and units == "1" or units == "metric":
+                precip = data["location"]["precip_mm"]
+            elif precips == "1" and units == "2" or units == "imperial":
+                precip = data["location"]["precip_in"]
+            elif precips == "1" and units == None:
+                precip = data["location"]["precip_in"]
+            else:
+                pass
+        else:
+            pass
+        if is_logged_in: 
+            if humids == "1":
+                humidity = data["location"]["humidity"]
+            else:
+                pass
         current_condition = data['current']['condition']["text"]
-        # feels_like_c = data['current']['feels_like_c']
-        # feels_like_f = data['current']['feels_like_f']
-        # vis_km = data['current']['vis_km']
-        # vis_miles = data['current']['vis_miles']
-        # uv = data['current']['uv']
-
-
+        if is_logged_in:
+            if feels == "1" and units == "1" or units == "metric":
+                feels_like = data['current']['feels_like_c']
+            elif feels == "1" and units == "2" or units == "imperial":
+                feels_like = data['current']['feels_like_f']
+            elif feels == "1" and units == None:
+                feels_like = data['current']['feels_like_f']
+            else:
+                pass
+        else:
+            pass
+        if is_logged_in: 
+            if visibs == "1" and units == "1" or units == "metric":
+                vis = data['current']['vis_km']
+            elif visibs == "1" and units == "2" or units == "imperial":
+                vis = data['current']['vis_miles']
+            elif visibs == "1" and units == None:
+                vis = data['current']['vis_miles']
+            else:
+                pass
+        else:
+            pass
+        
 
         output = f"{pyfiglet.figlet_format(location)}, {pyfiglet.figlet_format(region)},{pyfiglet.figlet_format(country)}\n\n"
-        output += f"Temperature {temp_f}F\n\n"
+        output += f"Temperature {temp}F\n\n"
+        if is_logged_in:
+            if feels is not None:
+                output += f"Temperature feels like {feels_like}\n\n"
         output += f"Local Time {local_time}\n\n"
-        output += f"Current Wind in MPH {wind_mph}mph\n\n"
+        output += f"Current Wind {wind}mph {wind_dir}\n\n"
+        if is_logged_in:
+            if precips is not None:
+                output += f"Current Precipitation {precip}\n\n"
+        if is_logged_in:        
+            if humids is not None:
+                output += f"Current Humidity {humidity}\n\n"
+        if is_logged_in:
+            if visibs is not None:
+                output += f"Current visibility is {vis}\n\n"
         output += f"Current Condition {current_condition} : "
 
         if data:
@@ -155,8 +204,8 @@ def fetch_weather():
         if response.status_code == 200:
             good_response_code()
     except KeyError:
-            print(chalk.red("Sorry, No information is available because you are illiterate. Try again after looking up how to spell. Thank You!"))
-            fetch_weather()
+             print(chalk.red("Sorry, No information is available because you are illiterate. Try again after looking up how to spell. Thank You!"))
+             fetch_weather()
 
 def get_city_input():
     return input(chalk.green("Enter a city: "))

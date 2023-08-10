@@ -11,6 +11,7 @@ simple-chalk = "*"
 argparse = "*"
 requests = "*"
 faker = "*"
+ipdb = "*"
 
 [dev-packages]
 
